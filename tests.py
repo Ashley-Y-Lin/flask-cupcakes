@@ -1,6 +1,6 @@
 import os
 
-os.environ["DATABASE_URL"] = 'postgresql:///cupcakes_test'
+os.environ["DATABASE_URL"] = "postgresql:///cupcakes_test"
 
 from unittest import TestCase
 
@@ -8,7 +8,7 @@ from app import app
 from models import db, Cupcake
 
 # Make Flask errors be real errors, rather than HTML pages with error info
-app.config['TESTING'] = True
+app.config["TESTING"] = True
 
 db.drop_all()
 db.create_all()
@@ -17,14 +17,14 @@ CUPCAKE_DATA = {
     "flavor": "TestFlavor",
     "size": "TestSize",
     "rating": 5,
-    "image_url": "http://test.com/cupcake.jpg"
+    "image_url": "http://test.com/cupcake.jpg",
 }
 
 CUPCAKE_DATA_2 = {
     "flavor": "TestFlavor2",
     "size": "TestSize2",
     "rating": 10,
-    "image_url": "http://test.com/cupcake2.jpg"
+    "image_url": "http://test.com/cupcake2.jpg",
 }
 
 
@@ -55,15 +55,20 @@ class CupcakeViewsTestCase(TestCase):
             self.assertEqual(resp.status_code, 200)
 
             data = resp.json
-            self.assertEqual(data, {
-                "cupcakes": [{
-                    "id": self.cupcake_id,
-                    "flavor": "TestFlavor",
-                    "size": "TestSize",
-                    "rating": 5,
-                    "image_url": "http://test.com/cupcake.jpg"
-                }]
-            })
+            self.assertEqual(
+                data,
+                {
+                    "cupcakes": [
+                        {
+                            "id": self.cupcake_id,
+                            "flavor": "TestFlavor",
+                            "size": "TestSize",
+                            "rating": 5,
+                            "image_url": "http://test.com/cupcake.jpg",
+                        }
+                    ]
+                },
+            )
 
     def test_get_cupcake(self):
         with app.test_client() as client:
@@ -72,15 +77,18 @@ class CupcakeViewsTestCase(TestCase):
 
             self.assertEqual(resp.status_code, 200)
             data = resp.json
-            self.assertEqual(data, {
-                "cupcake": {
-                    "id": self.cupcake_id,
-                    "flavor": "TestFlavor",
-                    "size": "TestSize",
-                    "rating": 5,
-                    "image_url": "http://test.com/cupcake.jpg"
-                }
-            })
+            self.assertEqual(
+                data,
+                {
+                    "cupcake": {
+                        "id": self.cupcake_id,
+                        "flavor": "TestFlavor",
+                        "size": "TestSize",
+                        "rating": 5,
+                        "image_url": "http://test.com/cupcake.jpg",
+                    }
+                },
+            )
 
     def test_create_cupcake(self):
         with app.test_client() as client:
@@ -89,19 +97,29 @@ class CupcakeViewsTestCase(TestCase):
 
             self.assertEqual(resp.status_code, 201)
 
-            cupcake_id = resp.json['cupcake']['id']
+            cupcake_id = resp.json["cupcake"]["id"]
 
             # don't know what ID we'll get, make sure it's an int
             self.assertIsInstance(cupcake_id, int)
 
-            self.assertEqual(resp.json, {
-                "cupcake": {
-                    "id": cupcake_id,
-                    "flavor": "TestFlavor2",
-                    "size": "TestSize2",
-                    "rating": 10,
-                    "image_url": "http://test.com/cupcake2.jpg"
-                }
-            })
+            self.assertEqual(
+                resp.json,
+                {
+                    "cupcake": {
+                        "id": cupcake_id,
+                        "flavor": "TestFlavor2",
+                        "size": "TestSize2",
+                        "rating": 10,
+                        "image_url": "http://test.com/cupcake2.jpg",
+                    }
+                },
+            )
 
             self.assertEqual(Cupcake.query.count(), 2)
+
+
+# Example of a curl request
+# curl http://127.0.0.1:5001/api/cupcakes \
+#     -X POST \
+#     -H "Content-Type: application/json" \
+#     -d '{"flavor":"flavorType", "size":"sizeType", "rating":10, "image_url":""}'
