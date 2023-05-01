@@ -2,10 +2,12 @@
 
 {% block content %}
 
+<h1>All the cupcakes!</h1>
 <div id="all-cupcakes">
   <!-- this is where cupcakes will be added using JS-->
 </div>
 
+<h1>Submit a new cupcake!</h1>
 <form id="add-new-cupcake" action="/api/cupcakes" method="POST">
   {{ form.hidden_tag() }}
 
@@ -13,8 +15,8 @@
          if field.widget.input_type != 'hidden' %}
 
     <p>
-      {{ field.label }}
-      {{ field }}
+      {{ field.label(class="form-label") }}
+      {{ field(class="form-control") }}
 
       {% for error in field.errors %}
         {{ error }}
@@ -23,7 +25,7 @@
 
   {% endfor %}
 
-  <button type="submit">Add a new cupcake!</button>
+  <button type="submit" class="btn btn-primary">Add a new cupcake!</button>
 </form>
 
 {% endblock %}
