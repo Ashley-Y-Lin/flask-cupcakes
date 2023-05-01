@@ -49,6 +49,7 @@ class CupcakeViewsTestCase(TestCase):
         db.session.rollback()
 
     def test_list_cupcakes(self):
+        """Test Cupcakes Listing"""
         with app.test_client() as client:
             resp = client.get("/api/cupcakes")
 
@@ -71,6 +72,7 @@ class CupcakeViewsTestCase(TestCase):
             )
 
     def test_get_cupcake(self):
+        """Test Get Cupcake Detail"""
         with app.test_client() as client:
             url = f"/api/cupcakes/{self.cupcake_id}"
             resp = client.get(url)
@@ -91,6 +93,7 @@ class CupcakeViewsTestCase(TestCase):
             )
 
     def test_create_cupcake(self):
+        """Test creation of new cupcake."""
         with app.test_client() as client:
             url = "/api/cupcakes"
             resp = client.post(url, json=CUPCAKE_DATA_2)
@@ -117,9 +120,63 @@ class CupcakeViewsTestCase(TestCase):
 
             self.assertEqual(Cupcake.query.count(), 2)
 
+    def test_edit_cupcake(self):
+        """Test editing a cupcake."""
+        with app.test_client() as client:
+            url = f"/api/cupcakes/{self.cupcake_id}"
+            resp = client.patch(url, json=CUPCAKE_DATA_2)
+
+            self.assertEqual(resp.status_code, 200)
+
+            self.assertEqual(
+                resp.json,
+                {
+                    "cupcake": {
+                        "id": self.cupcake_id,
+                        "flavor": "TestFlavor2",
+                        "size": "TestSize2",
+                        "rating": 10,
+                        "image_url": "http://test.com/cupcake2.jpg",
+                    }
+                },
+            )
+
+    def test_edit_cupcake_404(self):
+        """Test editing a cupcake with invalid id."""
+        with app.test_client() as client:
+            url = "/api/cupcakes/-1"
+            resp = client.patch(url, json=CUPCAKE_DATA_2)
+
+            self.assertEqual(resp.status_code, 404)
+
+
+    def test_delete_cupcake(self):
+        """Test deleting a cupcake."""
+        with app.test_client() as client:
+            url = f"/api/cupcakes/{self.cupcake_id}"
+            resp = client.delete(url)
+
+            self.assertEqual(resp.status_code, 200)
+
+            self.assertEqual(
+                resp.json,
+                {"deleted": self.cupcake_id},
+            )
+
+            self.assertEqual(Cupcake.query.count(), 0)
+
+    def test_delete_cupcake_404(self):
+        """Test deleting a cupcake with invalid id."""
+        with app.test_client() as client:
+            url = "/api/cupcakes/-1"
+            resp = client.delete(url)
+
+            self.assertEqual(resp.status_code, 404)
+
+
 
 # Example of a curl request
-# curl http://127.0.0.1:5001/api/cupcakes \
+# curl http://127.0.0.1:5001/api/cupcakes/1 \
 #     -X POST \
 #     -H "Content-Type: application/json" \
 #     -d '{"flavor":"flavorType", "size":"sizeType", "rating":10, "image_url":""}'

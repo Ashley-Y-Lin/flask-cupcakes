@@ -23,6 +23,11 @@ debug = DebugToolbarExtension(app)
 
 """Flask app for Cupcakes"""
 
+@app.get("/")
+def show_homepage():
+    """Show the homepage."""
+    return render_template("home.html")
+
 
 @app.get("/api/cupcakes")
 def show_all_cupcakes():
@@ -57,7 +62,7 @@ def show_one_cupcake(cupcake_id):
 def create_one_cupcake():
     """Adds a new cupcake to the database, and returns data about a single cupcake.
 
-    Returns JSON Return JSON {'cupcake': {id, flavor, size, rating, image_url}}
+    Returns JSON {'cupcake': {id, flavor, size, rating, image_url}}
     """
 
     flavor = request.json["flavor"]
@@ -78,19 +83,35 @@ def create_one_cupcake():
     return (jsonify(cupcake=serialized), 201)
 
 
-# FIXME: FIX
-@app.post("/tags/<int:tag_id>/edit")
-def edit_tag(tag_id):
-    """updates the tag with the given id
-    and redirects to the tag list page"""
+@app.patch("/api/cupcakes/<int:cupcake_id>")
+def edit_cupcake(cupcake_id):
+    """Updates the cupcake with the given id
 
-    tag = Tag.query.get_or_404(tag_id)
+    Returns JSON {'cupcake': {id, flavor, size, rating, image_url}}
+    """
 
-    tag.name = request.form["tag_name"]
+    cupcake = Cupcake.query.get_or_404(cupcake_id)
 
-    db.session.add(tag)
+    cupcake.flavor = request.json.get("flavor", cupcake.flavor)
+    cupcake.size = request.json.get("size", cupcake.size)
+    cupcake.rating = request.json.get("rating", cupcake.rating)
+    cupcake.image_url = request.json.get("image_url") or cupcake.image_url
+
+    db.session.add(cupcake)
     db.session.commit()
 
-    flash("Tag updated!")
+    return (jsonify(cupcake=cupcake.serialize()))
 
-    return redirect(f"/tags")
+@app.delete("/api/cupcakes/<int:cupcake_id>")
+def delete_cupcake(cupcake_id):
+    """Deletes the cupcake with the given id
+
+    Returns JSON {deleted: [cupcake-id]}
+    """
+
+    cupcake = Cupcake.query.get_or_404(cupcake_id)
+
+    db.session.delete(cupcake)
+    db.session.commit()
+
+    return (jsonify({"deleted": cupcake_id}))
