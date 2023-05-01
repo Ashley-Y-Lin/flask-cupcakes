@@ -1,9 +1,9 @@
 """Forms for cupcakes."""
 
-from wtforms import SelectField, StringField, TextAreaField, IntegerField
+from wtforms import StringField, TextAreaField, IntegerField
 from flask_wtf import FlaskForm
 
-from wtforms.validators import Optional, InputRequired, Length, URL
+from wtforms.validators import InputRequired, Length, URL
 
 
 class AddNewCupcakeForm(FlaskForm):
@@ -19,6 +19,6 @@ class AddNewCupcakeForm(FlaskForm):
         "Image URL",
         validators=[
             InputRequired(),
-            URL(require_tld=False, message="Please enter a valid URL"),
+            URL(message="Please enter a valid URL"),
         ],
     )

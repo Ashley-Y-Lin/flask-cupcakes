@@ -8,7 +8,8 @@
 </div>
 
 <h1>Submit a new cupcake!</h1>
-<form id="add-new-cupcake" action="/api/cupcakes" method="POST">
+<!-- dont need action/method if being handled in JS -->
+<form id="add-new-cupcake">
   {{ form.hidden_tag() }}
 
   {% for field in form
