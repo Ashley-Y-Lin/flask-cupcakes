@@ -3,6 +3,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from models import db, connect_db, Cupcake
 
+from forms import AddNewCupcakeForm
+
 # from forms import NewSongForPlaylistForm, AddSongForm, AddPlaylistForm
 
 app = Flask(__name__)
@@ -23,10 +25,14 @@ debug = DebugToolbarExtension(app)
 
 """Flask app for Cupcakes"""
 
+
 @app.get("/")
 def show_homepage():
     """Show the homepage."""
-    return render_template("home.html")
+
+    form = AddNewCupcakeForm()
+
+    return render_template("home.html", form=form)
 
 
 @app.get("/api/cupcakes")
@@ -100,7 +106,8 @@ def edit_cupcake(cupcake_id):
     db.session.add(cupcake)
     db.session.commit()
 
-    return (jsonify(cupcake=cupcake.serialize()))
+    return jsonify(cupcake=cupcake.serialize())
+
 
 @app.delete("/api/cupcakes/<int:cupcake_id>")
 def delete_cupcake(cupcake_id):
@@ -114,4 +121,4 @@ def delete_cupcake(cupcake_id):
     db.session.delete(cupcake)
     db.session.commit()
 
-    return (jsonify({"deleted": cupcake_id}))
+    return jsonify({"deleted": cupcake_id})

@@ -17,7 +17,7 @@ CUPCAKE_DATA = {
     "flavor": "TestFlavor",
     "size": "TestSize",
     "rating": 5,
-    "image_url": "http://test.com/cupcake.jpg",
+    "image_url": "https://natashaskitchen.com/wp-content/uploads/2020/05/Vanilla-Cupcakes-3.jpg",
 }
 
 CUPCAKE_DATA_2 = {
@@ -65,7 +65,7 @@ class CupcakeViewsTestCase(TestCase):
                             "flavor": "TestFlavor",
                             "size": "TestSize",
                             "rating": 5,
-                            "image_url": "http://test.com/cupcake.jpg",
+                            "image_url": "https://natashaskitchen.com/wp-content/uploads/2020/05/Vanilla-Cupcakes-3.jpg",
                         }
                     ]
                 },
@@ -87,7 +87,7 @@ class CupcakeViewsTestCase(TestCase):
                         "flavor": "TestFlavor",
                         "size": "TestSize",
                         "rating": 5,
-                        "image_url": "http://test.com/cupcake.jpg",
+                        "image_url": "https://natashaskitchen.com/wp-content/uploads/2020/05/Vanilla-Cupcakes-3.jpg",
                     }
                 },
             )
@@ -149,7 +149,6 @@ class CupcakeViewsTestCase(TestCase):
 
             self.assertEqual(resp.status_code, 404)
 
-
     def test_delete_cupcake(self):
         """Test deleting a cupcake."""
         with app.test_client() as client:
@@ -172,7 +171,6 @@ class CupcakeViewsTestCase(TestCase):
             resp = client.delete(url)
 
             self.assertEqual(resp.status_code, 404)
-
 
 
 # Example of a curl request

@@ -1,2 +1,29 @@
 {% extends "base.html" %}
 
+{% block content %}
+
+<div id="all-cupcakes">
+  <!-- this is where cupcakes will be added using JS-->
+</div>
+
+<form id="add-new-cupcake" action="/api/cupcakes" method="POST">
+  {{ form.hidden_tag() }}
+
+  {% for field in form
+         if field.widget.input_type != 'hidden' %}
+
+    <p>
+      {{ field.label }}
+      {{ field }}
+
+      {% for error in field.errors %}
+        {{ error }}
+      {% endfor %}
+    </p>
+
+  {% endfor %}
+
+  <button type="submit">Add a new cupcake!</button>
+</form>
+
+{% endblock %}
